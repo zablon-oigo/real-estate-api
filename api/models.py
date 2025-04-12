@@ -13,3 +13,11 @@ class User(Base):
     is_verified=sql.Column(sql.Boolean, default=False)
     date_joined=sql.Column(sql.TIMESTAMP(timezone=True),server_default=text('now()'))
     
+
+
+class UserOneTimePassword(Base):
+    __tablename__="user_otp"
+    id=sql.Column(sql.Integer, autoincrement=True, primary_key=True, index=True)
+    user_id=sql.Column(sql.Integer,sql.ForeignKey("users.id", ondelete="CASCADE"))
+    code=sql.Column(sql.String(6),unique=True, nullable=False)
+    is_valid=sql.Column(sql.Boolean,default=True)
