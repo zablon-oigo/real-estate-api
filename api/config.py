@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     mail_password: str
     mail_from: str
     mail_server: str
+    secret_key: str 
+    algorithm:str
 
     class Config:
         env_file = f"{pathlib.Path(__file__).resolve().parent}/.env"
