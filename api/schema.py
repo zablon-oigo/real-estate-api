@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, model_validator
 from typing import Optional
-
+from typing import Union
 
 class UserBase(BaseModel):
     email: EmailStr = Field(..., title="User email address", example="test@mail.com")
@@ -67,5 +67,11 @@ class AgentCreate(AgentBase):
 
 class Agent(AgentBase):
     id:int 
-    profile: Union[str,None]=None 
+    profile_img: Union[str, None]= None 
     user: User  
+
+    class Config:
+        orm_mode=True 
+
+
+
