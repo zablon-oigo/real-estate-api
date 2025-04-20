@@ -4,6 +4,9 @@ from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
 from .config import get_settings
 from . import schema
+from sqlalchemy.orm import Session
+from .database import get_db
+from . import models
 
 settings = get_settings()
 
@@ -32,13 +35,24 @@ def verify_access_token(token: str, credentials_exception):
         raise credentials_exception
 
 
-def get_authenticated_user(token: str = Depends(oauth_schema)):
+
+def get_authenticated_user(
+    token: str = Depends(oauth_schema),
+    db: Session = Depends(get_db)
+) -> models.User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid authentication credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    return verify_access_token(token, credentials_exception)
+    token_data = verify_access_token(token, credentials_exception)
+
+    user = db.query(models.User).filter(models.User.id == int(token_data.user_id)).first()
+    if not user:
+        raise credentials_exception
+
+    return user
+
 
 
 def decode_general_token(token: str):
