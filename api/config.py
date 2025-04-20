@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     mail_server: str
     secret_key: str 
     algorithm:str
+    cloud_name:str 
+    cloud_api_key:str 
+    cloud_secret:str
+    secure: True
 
     class Config:
         env_file = f"{pathlib.Path(__file__).resolve().parent}/.env"
